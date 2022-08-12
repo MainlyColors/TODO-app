@@ -1,4 +1,4 @@
-# Daily Logging App
+# TODO App
 
 This is a fullstack app created to be a todo list
 
