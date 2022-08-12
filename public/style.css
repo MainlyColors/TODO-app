@@ -1,0 +1,20 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+li {
+  font-size: 20px;
+}
+
+.icon {
+  display: inline-block;
+}
+
+.icon img {
+  display: inline-block;
+  width: 20px;
+  height: auto;
+  background-color: #000;
+}
