@@ -11,8 +11,17 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// database connection
+// variable setup
+const indexPath = path.join(__dirname, 'views', 'index.ejs');
+let database;
+const dbName = 'todo';
+
+// database connection & DB setup
 const client = new MongoClient(process.env.DB_URL);
+client.connect().then((client) => {
+  console.log(`Connected to ${dbName} Database`);
+  database = client.db('todo');
+});
 
 // Application Settings
 app.set('view engine', 'ejs');
@@ -21,9 +30,8 @@ app.set('view engine', 'ejs');
 // will look in public directory, so links don't need the public directory in the path
 // works for nested folders too
 app.use(express.static('public'));
-
-// variable setup
-const indexPath = path.join(__dirname, 'views', 'index.ejs');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Routes
 app.get('/', async (req, res) => {
@@ -34,15 +42,13 @@ steps on GET
 3. render page with data array passed in
 
 */
-  await client.connect();
-  const database = client.db('todo');
   const todoListCollection = database.collection('todos');
 
   // returns a cursor, with no filter return all
   const allTodoItems = await todoListCollection.find().toArray();
   //
 
-  const taskArr = allTodoItems.map((item) => item.thing);
+  const taskArr = allTodoItems.map((item) => item.todoItem);
 
   console.log(taskArr);
   res.render(indexPath, {
@@ -61,7 +67,22 @@ steps on post
    */
   console.log('in post');
   console.log(req.body);
-  res.redirect('/');
+
+  const todoItemObj = {
+    ...req.body,
+    completed: false,
+  };
+
+  const todoListCollection = database.collection('todos');
+
+  // returns promise
+  todoListCollection
+    .insertOne(todoItemObj)
+    .then((result) => {
+      console.log('Todo Added');
+      res.redirect('/');
+    })
+    .catch((err) => console.error(err));
 });
 
 const PORT = 3000 || process.env.PORT;
