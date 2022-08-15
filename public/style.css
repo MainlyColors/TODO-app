@@ -6,6 +6,8 @@
 
 li {
   font-size: 20px;
+  cursor: pointer;
+  user-select: none;
 }
 
 .icon {
@@ -17,4 +19,9 @@ li {
   width: 20px;
   height: auto;
   background-color: #000;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: red;
 }
