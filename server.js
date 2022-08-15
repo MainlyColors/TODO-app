@@ -107,7 +107,6 @@ app.put('/update', async (req, res) => {
   */
 
   const todoListCollection = database.collection('todos');
-  console.log(req.body);
 
   const filter = { todoItem: req.body.todoItem };
   const updateFilter = {
@@ -128,9 +127,18 @@ app.put('/update', async (req, res) => {
   );
 
   const message = `The update operation was ${updateResult.acknowledged} with ${updateResult.modifiedCount} documents modified`;
-
+  console.log(message);
   // 201 === 201 created
   res.send(true).status(201);
+});
+
+// unknown endpoint handling handling
+app.use((req, res) => {
+  res
+    .send(
+      `Bad Request: That endpoint doesn't exist<br><br><br><a href="/">Home</a>`
+    )
+    .status(404);
 });
 
 const PORT = 3000 || process.env.PORT;
