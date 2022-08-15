@@ -126,10 +126,23 @@ app.put('/update', async (req, res) => {
     updateOptions
   );
 
-  const message = `The update operation was ${updateResult.acknowledged} with ${updateResult.modifiedCount} documents modified`;
+  const message = `The UPDATE operation was ${updateResult.acknowledged} with ${updateResult.modifiedCount} documents modified`;
   console.log(message);
   // 201 === 201 created
   res.send(true).status(201);
+});
+
+// delete
+app.delete('/delete', async (req, res) => {
+  const todoListCollection = database.collection('todos');
+  const filter = { todoItem: req.body.todoItem };
+
+  const deleteResult = await todoListCollection.deleteOne(filter);
+
+  const message = `The DELETE operation was ${deleteResult.acknowledged} with ${deleteResult.deleteCount} documents deleted`;
+
+  // 204 No Content
+  res.send(true).status(204);
 });
 
 // unknown endpoint handling handling
