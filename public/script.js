@@ -37,16 +37,21 @@ function mark(e) {
 async function updateDB(newObj) {
   const jsonObj = JSON.stringify(newObj);
 
-  const rawResponse = await fetch('/update', {
-    method: 'PUT',
-    body: jsonObj,
-    headers: {
-      Accept: '*/*',
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const rawResponse = await fetch('/update', {
+      method: 'PUT',
+      body: jsonObj,
+      headers: {
+        Accept: '*/*',
+        'Content-Type': 'application/json',
+      },
+    });
 
-  const content = await rawResponse.json();
+    const content = await rawResponse.json();
 
-  console.log(content);
+    console.log(content);
+  } catch (err) {
+    console.log('💣💣💣 BANG BANG ERROR 💣💣💣');
+    console.error(err);
+  }
 }
