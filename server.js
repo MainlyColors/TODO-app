@@ -48,11 +48,23 @@ steps on GET
   const allTodoItems = await todoListCollection.find().toArray();
   //
 
-  const taskArr = allTodoItems.map((item) => item.todoItem);
+  const taskArr = [];
+  let count = 0;
+
+  // build out
+  allTodoItems.forEach((item) => {
+    if (!item.completed) count++;
+
+    taskArr.push({
+      todoItem: item.todoItem,
+      completed: item.completed,
+    });
+  });
 
   console.log(taskArr);
   res.render(indexPath, {
     data: taskArr,
+    count,
   });
 });
 
@@ -84,6 +96,9 @@ steps on post
     })
     .catch((err) => console.error(err));
 });
+
+// update
+app.put('/complete', (req, res) => {});
 
 const PORT = 3000 || process.env.PORT;
 

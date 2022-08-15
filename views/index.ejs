@@ -16,8 +16,12 @@
     <h1>TODO LIST:</h1>
     <ul>
       <% for(let i=0; i< data.length; i++) { %>
-      <li>
-        <%= data[i] %>
+        <%if(data[i].completed) { %>
+          <li class="completed" id="completed--js">
+            <% }else { %>
+              <li>
+          <% }%>
+        <%= data[i].todoItem %>
         <span class="icon"><img src="/assets/trash.svg" alt="delete" /></span>
       </li>
       <% } %>
@@ -25,7 +29,7 @@
 
     <h2>
       Items Left TODO:
-      <span id="itemsLeft--JS"><%= data.length %></span>
+      <span><%= count %></span>
     </h2>
 
     <h2>Add A Todo</h2>
