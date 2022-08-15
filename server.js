@@ -30,8 +30,8 @@ app.set('view engine', 'ejs');
 // will look in public directory, so links don't need the public directory in the path
 // works for nested folders too
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.get('/', async (req, res) => {
@@ -61,7 +61,6 @@ steps on GET
     });
   });
 
-  console.log(taskArr);
   res.render(indexPath, {
     data: taskArr,
     count,
@@ -70,13 +69,13 @@ steps on GET
 
 app.post('/newItem', (req, res) => {
   /*
-steps on post
-1. take req.body and build a full object
-2. connect to DB
-3. update with new object
-4. reload page with a redirect
-
-   */
+  steps on post
+  1. take req.body and build a full object
+  2. connect to DB
+  3. update with new object
+  4. reload page with a redirect
+  
+  */
   console.log('in post');
   console.log(req.body);
 
@@ -98,7 +97,41 @@ steps on post
 });
 
 // update
-app.put('/complete', (req, res) => {});
+app.put('/update', async (req, res) => {
+  /*
+  steps for PUT
+  1. get new object
+  2. grab DB matching object
+  3. update
+  4. send update
+  */
+
+  const todoListCollection = database.collection('todos');
+  console.log(req.body);
+
+  const filter = { todoItem: req.body.todoItem };
+  const updateFilter = {
+    $set: {
+      completed: req.body.completed,
+    },
+  };
+
+  const updateOptions = {
+    sort: { _id: -1 },
+    upsert: false,
+  };
+
+  const updateResult = await todoListCollection.updateOne(
+    filter,
+    updateFilter,
+    updateOptions
+  );
+
+  const message = `The update operation was ${updateResult.acknowledged} with ${updateResult.modifiedCount} documents modified`;
+
+  // 201 === 201 created
+  res.send(true).status(201);
+});
 
 const PORT = 3000 || process.env.PORT;
 
